@@ -1,6 +1,6 @@
 {
-  "name": "NaijaLearn AI - WAEC & NECO Curriculum Tutor",
-  "description": "AI-assisted curriculum tutor for Nigerian secondary school students (JSS1 - SS3) generating WAEC and NECO aligned practice quizzes and interactive explanations.",
+  "name": "BridgeLearn AI - WAEC, JAMB, IGCSE & SAT Tutor",
+  "description": "AI-assisted secondary curriculum tutor bridging local foundational learning (WAEC, NECO, JAMB) with global opportunities (Cambridge IGCSE, Digital SAT) through targeted practice quizzes and step-by-step remediation.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
