@@ -1,0 +1,6 @@
+{
+  "name": "NaijaLearn AI - WAEC & NECO Curriculum Tutor",
+  "description": "AI-assisted curriculum tutor for Nigerian secondary school students (JSS1 - SS3) generating WAEC and NECO aligned practice quizzes and interactive explanations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
