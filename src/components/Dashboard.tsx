@@ -13,21 +13,28 @@ import {
   GraduationCap,
   ChevronRight,
   Globe2,
-  Compass,
+  TrendingUp,
+  School,
+  CheckCircle2,
 } from 'lucide-react';
-import { ClassLevel, SubjectName, QuizResultHistory, CurriculumStandard } from '../types';
-import { CLASS_LEVELS, SUBJECTS, CURRICULUM_STANDARDS } from '../data/curriculumData';
+import { CurriculumStandard, QuizResultHistory } from '../types';
+import {
+  CURRICULUM_STANDARDS,
+  getClassLevelsForStandard,
+  getSubjectsForStandard,
+  SubjectMeta,
+} from '../data/curriculumData';
 
 interface DashboardProps {
   selectedStandard: CurriculumStandard;
-  selectedLevel: ClassLevel;
-  selectedSubject: SubjectName;
+  selectedLevel: string;
+  selectedSubject: string;
   selectedTopic: string;
   questionCount: number;
   isLoading: boolean;
   onSelectStandard: (standard: CurriculumStandard) => void;
-  onSelectLevel: (level: ClassLevel) => void;
-  onSelectSubject: (subject: SubjectName) => void;
+  onSelectLevel: (level: string) => void;
+  onSelectSubject: (subject: string) => void;
   onSelectTopic: (topic: string) => void;
   onSelectCount: (count: number) => void;
   onStartQuiz: () => void;
@@ -68,14 +75,44 @@ export const Dashboard: React.FC<DashboardProps> = ({
         return <BookOpen className="w-5 h-5 text-rose-600" />;
       case 'Sprout':
         return <Sprout className="w-5 h-5 text-lime-600" />;
+      case 'TrendingUp':
+        return <TrendingUp className="w-5 h-5 text-sky-600" />;
       default:
         return <GraduationCap className="w-5 h-5 text-slate-600" />;
     }
   };
 
-  const activeStandardMeta = CURRICULUM_STANDARDS.find((s) => s.id === selectedStandard) || CURRICULUM_STANDARDS[0];
-  const currentSubjectMeta = SUBJECTS.find((s) => s.id === selectedSubject) || SUBJECTS[0];
-  const popularTopics = currentSubjectMeta.popularTopics[selectedLevel] || [];
+  const activeStandardMeta =
+    CURRICULUM_STANDARDS.find((s) => s.id === selectedStandard) || CURRICULUM_STANDARDS[0];
+
+  // Dynamic class levels & subjects based strictly on selected standard
+  const availableClassLevels = getClassLevelsForStandard(selectedStandard);
+  const availableSubjects = getSubjectsForStandard(selectedStandard);
+
+  const currentSubjectMeta =
+    availableSubjects.find((s) => s.id === selectedSubject) || availableSubjects[0];
+
+  const popularTopics =
+    currentSubjectMeta?.popularTopics[selectedLevel] ||
+    Object.values(currentSubjectMeta?.popularTopics || {})[0] ||
+    [];
+
+  // Handle switching standard and updating class & subject automatically
+  const handleStandardSwitch = (std: CurriculumStandard) => {
+    onSelectStandard(std);
+    const newLevels = getClassLevelsForStandard(std);
+    const newSubjects = getSubjectsForStandard(std);
+
+    if (newLevels.length > 0) {
+      // Pick appropriate default (e.g. Grade 11 for SAT, SS1 for WAEC)
+      const defaultLvl = std === 'SAT' ? 'Grade 11' : newLevels[0].id;
+      onSelectLevel(defaultLvl);
+    }
+    if (newSubjects.length > 0) {
+      onSelectSubject(newSubjects[0].id);
+    }
+    onSelectTopic('');
+  };
 
   return (
     <div className="space-y-6 pb-12">
@@ -85,13 +122,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div className="relative z-10 max-w-2xl">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-900/60 border border-emerald-500/40 text-amber-300 text-xs font-semibold mb-3">
             <Globe2 className="w-3.5 h-3.5 text-amber-400" />
-            <span>Bridging Local Foundational Learning with Global Opportunities</span>
+            <span>Smart Standard Alignment · Local Foundation to Global Opportunities</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            Curriculum Tutor: WAEC, JAMB, IGCSE & SAT
+            Curriculum Tutor: {selectedStandard} Practice
           </h1>
           <p className="text-emerald-100/90 text-sm sm:text-base mt-2 leading-relaxed">
-            Practice questions and tailored explanations calibrated strictly to your target exam standard. Master local foundations in Nigeria and excel on global international stages.
+            {selectedStandard === 'SAT'
+              ? 'Calibrated strictly to College Board Digital SAT standards with US High School Grade Levels (Grade 9 - 12) and official SAT question formats.'
+              : selectedStandard === 'WAEC' || selectedStandard === 'NECO'
+              ? 'Calibrated strictly to the West African Examinations Council standards with Nigerian Junior & Senior Secondary levels (JSS1 - SS3) and local syllabi.'
+              : `Calibrated strictly to ${activeStandardMeta.name} syllabus and examination criteria.`}
           </p>
         </div>
       </div>
@@ -103,10 +144,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center">
               1
             </span>
-            <h2 className="font-bold text-slate-800 text-base sm:text-lg">Target Curriculum Standard</h2>
+            <h2 className="font-bold text-slate-800 text-base sm:text-lg">Examination Standard</h2>
           </div>
-          <span className="text-xs text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-            {activeStandardMeta.region} · {activeStandardMeta.scope}
+          <span className="text-xs text-emerald-800 font-bold bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 flex items-center gap-1">
+            <School className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Class System: {activeStandardMeta.classSystemName}</span>
           </span>
         </div>
 
@@ -116,7 +158,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             return (
               <button
                 key={std.id}
-                onClick={() => onSelectStandard(std.id)}
+                onClick={() => handleStandardSwitch(std.id)}
                 className={`p-3.5 rounded-xl border text-left transition-all ${
                   isSelected
                     ? 'bg-emerald-50 border-emerald-500 ring-2 ring-emerald-500/20 shadow-sm'
@@ -124,7 +166,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-lg">{std.flag}</span>
+                  <span className="text-xl">{std.flag}</span>
                   <span
                     className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
                       std.scope === 'Global Bridge'
@@ -137,9 +179,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     {std.scope}
                   </span>
                 </div>
-                <div className="mt-2 font-bold text-sm text-slate-900">{std.name}</div>
-                <div className="text-[11px] text-slate-500 mt-0.5 leading-snug line-clamp-2">
-                  {std.description}
+                <div className="mt-2 font-bold text-sm text-slate-900 flex items-center justify-between">
+                  <span>{std.name}</span>
+                  {isSelected && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
+                </div>
+                <div className="text-[11px] text-slate-500 mt-1 leading-snug line-clamp-2">
+                  {std.classSystemName}
                 </div>
               </button>
             );
@@ -147,33 +192,45 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
       </section>
 
-      {/* Step 2: Select Class Level */}
+      {/* Step 2: Select Class Level (Dynamic based on Standard) */}
       <section className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200/80">
         <div className="flex items-center justify-between mb-3.5">
           <div className="flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center">
               2
             </span>
-            <h2 className="font-bold text-slate-800 text-base sm:text-lg">Select Class Level</h2>
+            <h2 className="font-bold text-slate-800 text-base sm:text-lg">
+              {selectedStandard === 'SAT'
+                ? 'SAT High School Grade Level'
+                : selectedStandard === 'WAEC' || selectedStandard === 'NECO'
+                ? 'WAEC / Secondary Class Level'
+                : `${selectedStandard} Level`}
+            </h2>
           </div>
-          <span className="text-xs text-slate-500">Junior (JSS) & Senior (SS)</span>
+          <span className="text-xs text-slate-500 font-medium">
+            {selectedStandard === 'SAT'
+              ? 'US College Board Grade Framework'
+              : selectedStandard === 'WAEC' || selectedStandard === 'NECO'
+              ? 'Junior (JSS 1-3) & Senior (SS 1-3)'
+              : activeStandardMeta.classSystemName}
+          </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
-          {CLASS_LEVELS.map((level) => {
+        <div
+          className={`grid gap-2.5 ${
+            availableClassLevels.length <= 4
+              ? 'grid-cols-2 sm:grid-cols-4'
+              : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-6'
+          }`}
+        >
+          {availableClassLevels.map((level) => {
             const isSelected = selectedLevel === level.id;
             return (
               <button
                 key={level.id}
                 onClick={() => {
                   onSelectLevel(level.id);
-                  const subjectStillValid = SUBJECTS.find(
-                    (s) => s.id === selectedSubject && s.applicableLevels.includes(level.id)
-                  );
-                  if (!subjectStillValid) {
-                    const fallback = SUBJECTS.find((s) => s.applicableLevels.includes(level.id));
-                    if (fallback) onSelectSubject(fallback.id);
-                  }
+                  onSelectTopic('');
                 }}
                 className={`p-3 rounded-xl border text-left transition-all ${
                   isSelected
@@ -182,40 +239,47 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className={`font-bold text-base ${isSelected ? 'text-emerald-900' : 'text-slate-800'}`}>
+                  <span className={`font-bold text-sm sm:text-base ${isSelected ? 'text-emerald-900' : 'text-slate-800'}`}>
                     {level.label}
                   </span>
                   {isSelected && <span className="w-2 h-2 rounded-full bg-emerald-500" />}
                 </div>
                 <div className="mt-1">
                   <span
-                    className={`inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded ${
+                    className={`inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded truncate max-w-full ${
                       isSelected ? 'bg-emerald-200/70 text-emerald-900' : 'bg-slate-200/80 text-slate-700'
                     }`}
                   >
                     {level.badge}
                   </span>
                 </div>
+                <p className="text-[10px] text-slate-500 mt-1 line-clamp-1">
+                  {level.description}
+                </p>
               </button>
             );
           })}
         </div>
       </section>
 
-      {/* Step 3: Select Subject */}
+      {/* Step 3: Select Subject (Dynamic based on Standard) */}
       <section className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200/80">
         <div className="flex items-center justify-between mb-3.5">
           <div className="flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center">
               3
             </span>
-            <h2 className="font-bold text-slate-800 text-base sm:text-lg">Select Subject</h2>
+            <h2 className="font-bold text-slate-800 text-base sm:text-lg">
+              {selectedStandard} Subjects
+            </h2>
           </div>
-          <span className="text-xs text-slate-500">Filtered for {selectedLevel}</span>
+          <span className="text-xs text-slate-500">
+            Official {selectedStandard} curriculum courses
+          </span>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-          {SUBJECTS.filter((subj) => subj.applicableLevels.includes(selectedLevel)).map((subject) => {
+          {availableSubjects.map((subject) => {
             const isSelected = selectedSubject === subject.id;
             return (
               <button
@@ -243,21 +307,21 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
       </section>
 
-      {/* Step 4: Topic Selection & Quiz Length */}
+      {/* Step 4: Topic Selection & Question Count */}
       <section className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200/80">
         <div className="flex items-center justify-between mb-3.5">
           <div className="flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center">
               4
             </span>
-            <h2 className="font-bold text-slate-800 text-base sm:text-lg">Choose Topic & Length</h2>
+            <h2 className="font-bold text-slate-800 text-base sm:text-lg">Topic Focus & Drill Length</h2>
           </div>
-          <span className="text-xs text-slate-500">Curriculum Syllabus</span>
+          <span className="text-xs text-slate-500">{selectedStandard} Syllabus</span>
         </div>
 
         <div className="space-y-3">
           <label className="text-xs font-semibold text-slate-600 block">
-            Popular {selectedSubject} Topics for {selectedLevel}:
+            Popular {selectedSubject} Topics ({selectedStandard} · {selectedLevel}):
           </label>
           <div className="flex flex-wrap gap-2">
             <button
@@ -268,7 +332,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200/70'
               }`}
             >
-              🌟 General Revision ({selectedStandard} Standard)
+              🌟 Comprehensive ({selectedStandard} Mixed Questions)
             </button>
             {popularTopics.map((topic) => {
               const isSelected = selectedTopic === topic;
@@ -292,7 +356,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <div className="flex gap-2">
               <input
                 type="text"
-                placeholder="Or enter a specific topic (e.g. Simultaneous Equations, Stoichiometry, Trigonometry)..."
+                placeholder={
+                  selectedStandard === 'SAT'
+                    ? 'e.g. Systems of Equations, Linear Models, Rhetorical Synthesis...'
+                    : 'e.g. Quadratic Equations, Logarithms, Balancing Chemical Equations...'
+                }
                 value={customTopicInput}
                 onChange={(e) => setCustomTopicInput(e.target.value)}
                 onKeyDown={(e) => {
@@ -332,7 +400,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                   }`}
                 >
-                  {num} Questions {num === 3 && '(Quick)'} {num === 5 && '(Standard)'} {num === 10 && '(Exam)'}
+                  {num} Questions {num === 3 && '(Quick)'} {num === 5 && '(Standard)'} {num === 10 && '(Full Drill)'}
                 </button>
               ))}
             </div>
@@ -348,13 +416,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
             {isLoading ? (
               <>
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>Generating {selectedStandard} {selectedLevel} Questions...</span>
+                <span>Generating {selectedStandard} {selectedSubject} Questions for {selectedLevel}...</span>
               </>
             ) : (
               <>
                 <Sparkles className="w-5 h-5 text-amber-300" />
                 <span>
-                  Start {selectedStandard} Practice Quiz ({selectedLevel} {selectedSubject})
+                  Start {selectedStandard} {selectedSubject} Quiz ({selectedLevel})
                 </span>
                 <ChevronRight className="w-5 h-5" />
               </>

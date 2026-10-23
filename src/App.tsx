@@ -96,8 +96,12 @@ export default function App() {
       }
     } catch (err) {
       console.warn('Backend fetch failed, utilizing verified curriculum fallback bank:', err);
-      const fallbackKey = `${selectedLevel}-${selectedSubject}`;
-      const fallback = FALLBACK_QUESTIONS[fallbackKey] || FALLBACK_QUESTIONS['JSS1-Mathematics'];
+      const fallbackKey = `${selectedStandard}-${selectedLevel}-${selectedSubject}`;
+      const fallback =
+        FALLBACK_QUESTIONS[fallbackKey] ||
+        (selectedStandard === 'SAT'
+          ? FALLBACK_QUESTIONS['SAT-Grade 11-SAT Math']
+          : FALLBACK_QUESTIONS['WAEC-SS1-Mathematics'] || Object.values(FALLBACK_QUESTIONS)[0]);
       setQuestions(fallback.slice(0, questionCount));
       setView('quiz');
     } finally {

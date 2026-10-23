@@ -1,17 +1,8 @@
 export type CurriculumStandard = 'WAEC' | 'NECO' | 'JAMB' | 'SAT' | 'IGCSE';
 
-export type ClassLevel = 'JSS1' | 'JSS2' | 'JSS3' | 'SS1' | 'SS2' | 'SS3';
+export type ClassLevel = string;
 
-export type SubjectName =
-  | 'Mathematics'
-  | 'Basic Science'
-  | 'Chemistry'
-  | 'Physics'
-  | 'Biology'
-  | 'English Studies'
-  | 'Civic Education'
-  | 'Agricultural Science'
-  | 'Economics';
+export type SubjectName = string;
 
 export interface Question {
   id: number;
@@ -56,8 +47,8 @@ export interface QuizResultHistory {
   id: string;
   date: string;
   curriculum_standard: CurriculumStandard;
-  class_level: ClassLevel;
-  subject: SubjectName;
+  class_level: string;
+  subject: string;
   topic?: string;
   score: number;
   totalQuestions: number;

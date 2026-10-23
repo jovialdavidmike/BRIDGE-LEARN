@@ -83,7 +83,72 @@ When a student answers a question incorrectly or asks for clarification on a top
 
 // Curated fallback questions in case API key is missing or network failure occurs during hackathon
 const CURATED_FALLBACK_QUIZZES: Record<string, any[]> = {
-  'JSS1-Mathematics': [
+  'SAT-Grade 11-SAT Math': [
+    {
+      id: 1,
+      question: 'In the xy-plane, line k passes through the point (4, 11) and has a slope of -2. What is the y-intercept of line k?',
+      options: ['A) (0, 3)', 'B) (0, 15)', 'C) (0, 19)', 'D) (0, 22)'],
+      correct_answer: 'C) (0, 19)',
+      explanation: 'Using the point-slope form y - 11 = -2(x - 4), we get y = -2x + 8 + 11 = -2x + 19. Setting x = 0 yields y = 19, so the y-intercept is (0, 19).',
+    },
+    {
+      id: 2,
+      question: 'If 3x + 2y = 23 and 2x - y = 6, what is the value of x + y?',
+      options: ['A) 7', 'B) 9', 'C) 11', 'D) 13'],
+      correct_answer: 'B) 9',
+      explanation: 'Multiplying 2x - y = 6 by 2 yields 4x - 2y = 12. Adding this to 3x + 2y = 23 gives 7x = 35 => x = 5. Substituting gives y = 4. Thus x + y = 9.',
+    },
+    {
+      id: 3,
+      question: 'The function f(t) = 850(1.06)^t models the value of an investment fund in dollars t years after opening. Which statement best interprets 1.06 in this context?',
+      options: [
+        'A) The fund value increases by 6% each year',
+        'B) The initial balance was $1.06',
+        'C) The fund increases by $106 every year',
+        'D) The fund value doubles every 6 years',
+      ],
+      correct_answer: 'A) The fund value increases by 6% each year',
+      explanation: 'In the exponential model f(t) = P(1 + r)^t, the factor 1.06 corresponds to 1 + 0.06, which represents an annual percentage increase of 6%.',
+    },
+  ],
+  'SAT-Grade 11-Reading and Writing': [
+    {
+      id: 1,
+      question: 'Botanist Jane Alvarez observed that alpine wildflowers growing in rocky soil produce deeper root systems than those growing in nutrient-rich valley loam. Alvarez hypothesized that the deeper roots _______ the flowers to access moisture reserves during prolonged seasonal droughts.',
+      options: ['A) enables', 'B) enable', 'C) has enabled', 'D) is enabling'],
+      correct_answer: 'B) enable',
+      explanation: 'The subject of the clause is the plural noun phrase "the deeper roots," which agrees with the plural verb form "enable."',
+    },
+    {
+      id: 2,
+      question: 'While researching a topic, a student took the following notes:\n• The Chaco Canyon civilization in New Mexico flourished from 900 to 1150 CE.\n• Pueblo Bonito was the largest Great House in the canyon, containing over 600 masonry rooms.\n• Archaeologists have uncovered thousands of turquoise artifacts at the site.\nWhich choice most effectively uses relevant information from the notes to emphasize the monumental scale of Pueblo Bonito?',
+      options: [
+        'A) Located in New Mexico, the Chaco Canyon civilization flourished from 900 to 1150 CE.',
+        'B) Containing more than 600 masonry rooms, Pueblo Bonito stood as the largest Great House in Chaco Canyon.',
+        'C) Archaeologists studying Chaco Canyon have found thousands of turquoise artifacts.',
+        'D) Pueblo Bonito was built by a civilization that flourished during the medieval era.',
+      ],
+      correct_answer: 'B) Containing more than 600 masonry rooms, Pueblo Bonito stood as the largest Great House in Chaco Canyon.',
+      explanation: 'Choice B directly emphasizes the architectural scale by mentioning the "more than 600 masonry rooms" and its distinction as the largest Great House.',
+    },
+  ],
+  'WAEC-SS1-Mathematics': [
+    {
+      id: 1,
+      question: 'Evaluate log₁₀ 25 + log₁₀ 4 without using mathematical tables.',
+      options: ['A) 1', 'B) 2', 'C) 10', 'D) 100'],
+      correct_answer: 'B) 2',
+      explanation: 'By the product law of logarithms: log₁₀ 25 + log₁₀ 4 = log₁₀(25 × 4) = log₁₀ 100 = log₁₀(10²) = 2.',
+    },
+    {
+      id: 2,
+      question: 'A trader in Balogun market bought a bag of rice for ₦30,000 and sold it for ₦36,000. Calculate the percentage profit.',
+      options: ['A) 15%', 'B) 16.7%', 'C) 20%', 'D) 25%'],
+      correct_answer: 'C) 20%',
+      explanation: 'Profit = ₦36,000 - ₦30,000 = ₦6,000. Percentage profit = (6,000 / 30,000) × 100% = 20%.',
+    },
+  ],
+  'WAEC-JSS1-Mathematics': [
     {
       id: 1,
       question: 'Find the Least Common Multiple (L.C.M.) of 12 and 18.',
@@ -93,63 +158,10 @@ const CURATED_FALLBACK_QUIZZES: Record<string, any[]> = {
     },
     {
       id: 2,
-      question: 'A bag of gari in Mile 12 market costs ₦18,000. If Musa gets a 15% discount for paying cash, how much does he pay?',
-      options: ['A) ₦15,300', 'B) ₦16,200', 'C) ₦15,000', 'D) ₦17,100'],
-      correct_answer: 'A) ₦15,300',
-      explanation: 'Discount = 15% of ₦18,000 = 0.15 × 18,000 = ₦2,700. Amount paid = ₦18,000 - ₦2,700 = ₦15,300.',
-    },
-    {
-      id: 3,
-      question: 'Simplify the algebraic expression: 5x + 3y - 2x + 4y',
-      options: ['A) 3x + 7y', 'B) 7x + 7y', 'C) 3x - y', 'D) 10xy'],
-      correct_answer: 'A) 3x + 7y',
-      explanation: 'Group like terms: (5x - 2x) + (3y + 4y) = 3x + 7y.',
-    },
-  ],
-  'SS1-Chemistry': [
-    {
-      id: 1,
-      question: 'What is the electronic configuration of an atom of Magnesium (atomic number 12)?',
-      options: ['A) 2, 8, 1', 'B) 2, 8, 2', 'C) 2, 8, 3', 'D) 2, 8, 4'],
-      correct_answer: 'B) 2, 8, 2',
-      explanation: 'Magnesium has 12 electrons arranged in shells as K=2, L=8, M=2.',
-    },
-    {
-      id: 2,
-      question: 'Which of the following processes separates a mixture of kerosene and water?',
-      options: ['A) Simple distillation', 'B) Using a separating funnel', 'C) Filtration', 'D) Fractional crystallization'],
-      correct_answer: 'B) Using a separating funnel',
-      explanation: 'Kerosene and water are immiscible liquids with different densities; a separating funnel is used to tap off the denser liquid.',
-    },
-    {
-      id: 3,
-      question: 'Which element is situated in Group 2, Period 3 of the Periodic Table?',
-      options: ['A) Sodium', 'B) Magnesium', 'C) Aluminium', 'D) Calcium'],
-      correct_answer: 'B) Magnesium',
-      explanation: 'Magnesium (Z=12) has 3 electron shells (Period 3) and 2 valence electrons (Group 2).',
-    },
-  ],
-  'JSS1-Basic Science': [
-    {
-      id: 1,
-      question: 'Which of the following organs is responsible for pumping blood throughout the human body?',
-      options: ['A) Brain', 'B) Lungs', 'C) Heart', 'D) Liver'],
-      correct_answer: 'C) Heart',
-      explanation: 'The human heart is a muscular pump that circulates oxygenated and deoxygenated blood through the circulatory system.',
-    },
-    {
-      id: 2,
-      question: 'Which of these is an example of renewable energy in Nigeria?',
-      options: ['A) Crude oil', 'B) Coal from Enugu', 'C) Solar energy from the sun', 'D) Natural gas'],
-      correct_answer: 'C) Solar energy from the sun',
-      explanation: 'Solar energy is replenished naturally by sunlight and cannot be depleted, unlike fossil fuels such as coal and crude oil.',
-    },
-    {
-      id: 3,
-      question: 'What happens to the molecules of water when liquid water freezes into ice?',
-      options: ['A) They move faster', 'B) They lose kinetic energy and become fixed', 'C) They turn into steam', 'D) They expand infinitely'],
-      correct_answer: 'B) They lose kinetic energy and become fixed',
-      explanation: 'During freezing, cooling removes thermal energy so water molecules slow down and settle into a crystalline lattice structure.',
+      question: 'Chinedu bought 4 exercise books at ₦150 each from a stationery shop in Enugu. How much change will he receive if he pays with a ₦1,000 note?',
+      options: ['A) ₦400', 'B) ₦600', 'C) ₦350', 'D) ₦450'],
+      correct_answer: 'A) ₦400',
+      explanation: 'The 4 exercise books cost 4 × ₦150 = ₦600. Subtracting ₦600 from ₦1,000 leaves ₦400 change.',
     },
   ],
 };
@@ -175,30 +187,48 @@ app.post('/api/quiz/generate', async (req, res) => {
   } = req.body;
 
   const prompt = `MODE A: QUESTION GENERATION
-Please generate ${count} multiple-choice practice questions strictly adhering to:
+Please generate ${count} authentic practice questions strictly adhering to:
 - Curriculum Standard: ${curriculum_standard}
 - Class Level: ${class_level}
 - Subject: ${subject}
-${topic ? `- Topic Focus: ${topic}` : '- Core Curriculum Topics'}
+${topic ? `- Topic Focus: ${topic}` : '- Core Syllabus Topics'}
 
-Curriculum Standard Specific Guidance:
-- WAEC / NECO: Follow Nigerian senior/junior secondary curriculum (NERDC). Use Nigerian contexts, local currencies (₦), and WAEC examination phrasing.
-- JAMB (UTME): Fast-paced CBT style, highly conceptual testing understanding of syllabus prerequisites.
-- IGCSE: Cambridge international GCSE syllabus, metric units, international contexts, clear multi-step reasoning.
-- SAT: College Board Digital SAT question style, realistic reasoning, US units/contexts where appropriate.
+CURRICULUM & SUBJECT REQUIREMENTS:
+1. IF CURRICULUM STANDARD IS "SAT":
+   - Class Level uses US High School Grade format: ${class_level} (Grade 9, 10, 11, or 12).
+   - Question Style: Strict Digital SAT format (College Board style).
+   - Subject Questions:
+     * If subject is "SAT Math": Feature authentic SAT domains (Heart of Algebra, Passport to Advanced Math, Problem Solving & Data Analysis, Geometry & Trig). Clear math notation, variable relationships, constants, or coordinate graphs.
+     * If subject is "Reading and Writing": Present a short 2-4 sentence stimulus text or student research notes, followed by an official SAT question stem (e.g., words in context, conventions of Standard English, logical transitions, or rhetorical synthesis).
+     * If subject is Physics, Chemistry, or Biology: Pre-college / AP / SAT subject difficulty calibrated to ${class_level}.
+   - Context: US English spelling, standard units, realistic scenarios.
+
+2. IF CURRICULUM STANDARD IS "WAEC" OR "NECO":
+   - Class Level uses Nigerian Secondary format: ${class_level} (JSS1, JSS2, JSS3 for Junior; SS1, SS2, SS3 for Senior).
+   - Question Style: Official West African Examinations Council (WAEC/WASSCE) or NECO syllabus questions.
+   - Context: Nigerian contexts, currency in Naira (₦), local names (Amina, Chinedu, Musa, Emeka), local commerce/produce.
+
+3. IF CURRICULUM STANDARD IS "JAMB":
+   - CBT speed-focused university entrance format with 4 options.
+
+4. IF CURRICULUM STANDARD IS "IGCSE":
+   - Cambridge International Secondary (Years 7 - 11) with metric units and command words.
 
 Requirements:
-1. Adapt vocabulary and difficulty strictly to ${curriculum_standard} at the ${class_level} grade level.
-2. Provide 4 options labeled A), B), C), D).
-3. Specify correct_answer in format "A) [Text]".
-4. Provide a clear 1-2 sentence explanation of why this is correct.
-5. Return strictly the JSON structure specified in your system instructions.`;
+- Ensure 4 options labeled A), B), C), D).
+- Specify correct_answer in format "A) [Text]".
+- Provide a clear 1-2 sentence explanation tailored to the examination level.
+- Return strictly the JSON structure specified in your system instructions.`;
 
   try {
     if (!process.env.GEMINI_API_KEY) {
       console.warn('GEMINI_API_KEY is not set. Falling back to curated questions.');
-      const fallbackKey = `${class_level}-${subject}`;
-      const questions = CURATED_FALLBACK_QUIZZES[fallbackKey] || CURATED_FALLBACK_QUIZZES['JSS1-Mathematics'];
+      const fallbackKey = `${curriculum_standard}-${class_level}-${subject}`;
+      const questions =
+        CURATED_FALLBACK_QUIZZES[fallbackKey] ||
+        (curriculum_standard === 'SAT'
+          ? CURATED_FALLBACK_QUIZZES['SAT-Grade 11-SAT Math']
+          : CURATED_FALLBACK_QUIZZES['WAEC-SS1-Mathematics'] || CURATED_FALLBACK_QUIZZES['WAEC-JSS1-Mathematics']);
       return res.json({
         mode: 'quiz',
         curriculum_standard,
@@ -238,8 +268,12 @@ Requirements:
     });
   } catch (error: any) {
     console.error('Error generating quiz:', error);
-    const fallbackKey = `${class_level}-${subject}`;
-    const fallbackList = CURATED_FALLBACK_QUIZZES[fallbackKey] || CURATED_FALLBACK_QUIZZES['JSS1-Mathematics'];
+    const fallbackKey = `${curriculum_standard}-${class_level}-${subject}`;
+    const fallbackList =
+      CURATED_FALLBACK_QUIZZES[fallbackKey] ||
+      (curriculum_standard === 'SAT'
+        ? CURATED_FALLBACK_QUIZZES['SAT-Grade 11-SAT Math']
+        : CURATED_FALLBACK_QUIZZES['WAEC-SS1-Mathematics'] || CURATED_FALLBACK_QUIZZES['WAEC-JSS1-Mathematics']);
 
     return res.status(200).json({
       mode: 'quiz',
